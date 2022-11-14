@@ -27,7 +27,8 @@ std = [ 0.229, 0.224, 0.225 ]
 
 # Remove the mean
 im = transforms.Compose([
-    transforms.Scale(256),
+    #transforms.Scale(256),
+    transforms.Resize(256),
     transforms.CenterCrop(224),
     transforms.ToTensor(),
     transforms.Normalize(mean = mean,
@@ -50,8 +51,8 @@ def clip_tensor(A, minv, maxv):
 
 clip = lambda x: clip_tensor(x, 0, 255)
 
-tf = transforms.Compose([transforms.Normalize(mean=[0, 0, 0], std=map(lambda x: 1 / x, std)),
-                        transforms.Normalize(mean=map(lambda x: -x, mean), std=[1, 1, 1]),
+tf = transforms.Compose([transforms.Normalize(mean=[0, 0, 0], std=list(map(lambda x: 1 / x, std))),
+                        transforms.Normalize(mean=list(map(lambda x: -x, mean)), std=[1, 1, 1]),
                         transforms.Lambda(clip),
                         transforms.ToPILImage(),
                         transforms.CenterCrop(224)])
@@ -60,3 +61,4 @@ plt.figure()
 plt.imshow(tf(pert_image.cpu()[0]))
 plt.title(str_label_pert)
 plt.show()
+plt.savefig(fname='toto')
